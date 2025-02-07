@@ -9,10 +9,15 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class AbstractEntity {
 
+    @Id
+    @GeneratedValue
     private int id;
 
+    @NotNull(message = "Name cannot be blank")
+    @Size(min = 3, max = 64, message = "Name must be between 3 and 64 characters")
     private String name;
 
     public int getId() {
