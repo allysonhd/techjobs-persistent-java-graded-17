@@ -7,7 +7,6 @@ import jakarta.persistence.ManyToOne;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
 public class Job extends AbstractEntity {
 

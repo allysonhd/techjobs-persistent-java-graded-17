@@ -9,5 +9,4 @@ public class TechJobsPersistentApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TechJobsPersistentApplication.class, args);
 	}
-
 }
