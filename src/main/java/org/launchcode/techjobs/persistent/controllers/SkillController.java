@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
 
 @Controller
@@ -15,45 +16,45 @@ import java.util.Optional;
 public class SkillController {
 
 
-        @Autowired
-        private SkillRepository skillRepository;
+    @Autowired
+    private SkillRepository skillRepository;
 
-        @GetMapping("/")
-        public String index (Model model) {
-            model.addAttribute("skills", skillRepository.findAll());
-            return "skills/index";
-        }
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("skills", skillRepository.findAll());
+        return "skills/index";
+    }
 
-        @GetMapping("add")
-        public String displayAddSkillForm(Model model) {
-            model.addAttribute(new Skill());
+    @GetMapping("add")
+    public String displayAddSkillForm(Model model) {
+        model.addAttribute(new Skill());
+        return "skills/add";
+    }
+
+    @PostMapping("add")
+    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
+                                      Errors errors, Model model) {
+
+        if (errors.hasErrors()) {
+            model.addAttribute("skills", "All Skills");
             return "skills/add";
         }
+        skillRepository.save(newSkill);
+        return "redirect:";
+    }
 
-        @PostMapping("add")
-        public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
-                                             Errors errors, Model model) {
+    @GetMapping("view/{skillId}")
+    public String displayViewSkill(Model model, @PathVariable int skillId) {
 
-            if (errors.hasErrors()) {
-                model.addAttribute("skills", "All Skills");
-                return "skills/add";
-            }
-            skillRepository.save(newSkill);
-            return "redirect:";
+        Optional<Skill> optSkill = skillRepository.findById(skillId);
+        if (optSkill.isPresent()) {
+            Skill skill = optSkill.get();
+            model.addAttribute("skill", skill);
+            return "skills/view";
+        } else {
+            return "redirect:../";
         }
 
-        @GetMapping("view/{skillId}")
-        public String displayViewSkill(Model model, @PathVariable int skillId) {
-
-            Optional optSkill = skillRepository.findById(skillId);
-            if (optSkill.isPresent()) {
-                Skill skill = (Skill) optSkill.get();
-                model.addAttribute("skill", skill);
-                return "skills/view";
-            } else {
-                return "redirect:../";
-            }
-
-        }
+    }
 
 }
